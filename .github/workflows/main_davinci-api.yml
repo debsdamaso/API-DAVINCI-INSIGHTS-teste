@@ -1,4 +1,4 @@
-name: Build and deploy JAR app to Azure Web App - api-davinci-insights
+name: Build and deploy JAR app to Azure Web App - davinci-api
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write
-  
+
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
@@ -50,18 +50,17 @@ jobs:
           name: java-app
       
       - name: Login to Azure
-  uses: azure/login@v2
-  with:
-    client-id: ${{ secrets.AZURE_CLIENT_ID }}
-    tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-    subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-    client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'api-davinci-insights'
+          app-name: 'davinci-api'
           package: '*.jar'
           slot-name: 'production'
