@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy JAR app to Azure Web App - davinci-api
+name: Build and deploy JAR app to Azure Web App - api-davinci-insights
 
 on:
   push:
@@ -14,22 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
       - name: Set up Java version
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v3
         with:
           java-version: '17'
-          distribution: 'adoptopenjdk'
+          distribution: 'microsoft'
 
+      # Mude para o diretório onde o pom.xml está localizado
       - name: Build with Maven
+        working-directory: 'Challenge_JavaV.3/insights'
         run: mvn clean install
 
+      # Verifique os arquivos gerados no diretório target
+      - name: List files in target directory
+        run: ls -la Challenge_JavaV.3/insights/target
+
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: target/*.jar
+          path: 'Challenge_JavaV.3/insights/target/*.jar'
 
   deploy:
     runs-on: ubuntu-latest
@@ -38,25 +41,25 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write # This is required for requesting the JWT
-
+      id-token: write
+  
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: java-app
-
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_83AA1C5C48804155A011BB8F92DF7D31 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A40A8EB7E83A4028988B4A6FD886DCBF }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_99C80EBEBDFF4BB2B252A8EFB9CF1E7D }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_C26DBEB5E9094C0E820CCDD289C984E0 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_BB869C055F4C4C519B04F6DBFE9201CB }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_56D7EEB12E544A3CA5BE808223DFAF86 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'davinci-api'
-          slot-name: 'Production'
+          app-name: 'api-davinci-insights'
           package: '*.jar'
+          slot-name: 'production'
