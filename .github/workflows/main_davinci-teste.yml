@@ -1,6 +1,3 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
 name: Build and deploy JAR app to Azure Web App - davinci-teste
 
 on:
@@ -22,12 +19,10 @@ jobs:
           java-version: '17'
           distribution: 'microsoft'
 
-# Mude para o diretório onde o pom.xml está localizado
       - name: Build with Maven
         working-directory: 'Challenge_JavaV.3/insights'
         run: mvn clean install
 
-# Verifique os arquivos gerados no diretório target
       - name: List files in target directory
         run: ls -la Challenge_JavaV.3/insights/target
 
@@ -55,15 +50,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B3DE269519A04FF6AF6DC4FB019E106D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_3FE57C2B7A7540B1ACAC029A25EA1223 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_0F817667AFA24176B3C9AE50B5ABE087 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'davinci-teste'
-          slot-name: 'Production'
-          package: '*.jar'
-          
+          package: 'Challenge_JavaV.3/insights/target/*.jar'
+
