@@ -22,14 +22,20 @@ jobs:
           java-version: '17'
           distribution: 'microsoft'
 
+# Mude para o diretório onde o pom.xml está localizado
       - name: Build with Maven
+        working-directory: 'Challenge_JavaV.3/insights'
         run: mvn clean install
 
+# Verifique os arquivos gerados no diretório target
+      - name: List files in target directory
+        run: ls -la Challenge_JavaV.3/insights/target
+
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: java-app
-          path: '${{ github.workspace }}/target/*.jar'
+          path: 'Challenge_JavaV.3/insights/target/*.jar'
 
   deploy:
     runs-on: windows-latest
